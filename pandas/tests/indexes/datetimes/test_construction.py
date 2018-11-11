@@ -1,18 +1,19 @@
 from datetime import timedelta
-from operator import attrgetter
 from functools import partial
+from operator import attrgetter
 
+import numpy as np
 import pytest
 import pytz
-import numpy as np
 
-import pandas as pd
-from pandas import offsets
-import pandas.util.testing as tm
 from pandas._libs.tslib import OutOfBoundsDatetime
 from pandas._libs.tslibs import conversion
-from pandas import (DatetimeIndex, Index, Timestamp, datetime, date_range,
-                    to_datetime)
+
+import pandas as pd
+from pandas import (
+    DatetimeIndex, Index, Timestamp, date_range, datetime, offsets,
+    to_datetime)
+import pandas.util.testing as tm
 
 
 class TestDatetimeIndex(object):
@@ -252,8 +253,7 @@ class TestDatetimeIndex(object):
                            Timestamp('2011-01-02 10:00', tz='US/Eastern')],
                           name='idx')
 
-        with tm.assert_raises_regex(TypeError,
-                                    'data is already tz-aware'):
+        with pytest.raises(TypeError, match='data is already tz-aware'):
             DatetimeIndex([Timestamp('2011-01-01 10:00'),
                            Timestamp('2011-01-02 10:00', tz='US/Eastern')],
                           tz='Asia/Tokyo', name='idx')
@@ -263,8 +263,7 @@ class TestDatetimeIndex(object):
                            Timestamp('2011-01-02 10:00', tz='US/Eastern')],
                           tz='US/Eastern', name='idx')
 
-        with tm.assert_raises_regex(TypeError,
-                                    'data is already tz-aware'):
+        with pytest.raises(TypeError, match='data is already tz-aware'):
             # passing tz should results in DatetimeIndex, then mismatch raises
             # TypeError
             Index([pd.NaT, Timestamp('2011-01-01 10:00'),
@@ -313,7 +312,7 @@ class TestDatetimeIndex(object):
         tm.assert_index_equal(rng, exp)
 
         msg = 'periods must be a number, got foo'
-        with tm.assert_raises_regex(TypeError, msg):
+        with pytest.raises(TypeError, match=msg):
             DatetimeIndex(start='1/1/2000', periods='foo', freq='D')
 
         pytest.raises(ValueError, DatetimeIndex, start='1/1/2000',

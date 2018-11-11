@@ -1,7 +1,7 @@
-import pytest
+from datetime import timedelta
 
 import numpy as np
-from datetime import timedelta
+import pytest
 
 import pandas as pd
 import pandas.util.testing as tm
@@ -57,7 +57,7 @@ class TestTimedeltaIndex(object):
         tm.assert_index_equal(rng, exp)
 
         msg = 'periods must be a number, got foo'
-        with tm.assert_raises_regex(TypeError, msg):
+        with pytest.raises(TypeError, match=msg):
             TimedeltaIndex(start='1 days', periods='foo', freq='D')
 
         pytest.raises(ValueError, TimedeltaIndex, start='1 days',
